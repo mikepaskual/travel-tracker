@@ -5,6 +5,7 @@ import com.mikepaskual.traveltracker.dto.CountryDto;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class CountryService {
@@ -17,5 +18,12 @@ public class CountryService {
 
     public List<CountryDto> getCountries() {
         return restCountriesClient.getCountries();
+    }
+
+    public Optional<CountryDto> getCountryByCode(String code) {
+        return restCountriesClient.getCountries()
+                .stream()
+                .filter(country -> country.code().equalsIgnoreCase(code))
+                .findFirst();
     }
 }
