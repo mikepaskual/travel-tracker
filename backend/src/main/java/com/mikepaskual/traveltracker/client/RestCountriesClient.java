@@ -1,6 +1,7 @@
 package com.mikepaskual.traveltracker.client;
 
 import com.mikepaskual.traveltracker.client.dto.RestCountryResponse;
+import com.mikepaskual.traveltracker.config.RestCountriesProperties;
 import com.mikepaskual.traveltracker.dto.CountryDto;
 import org.springframework.stereotype.Component;
 import org.springframework.web.client.RestClient;
@@ -12,15 +13,21 @@ import java.util.List;
 public class RestCountriesClient {
 
     private final RestClient restClient;
+    private final RestCountriesProperties properties;
 
-    public RestCountriesClient(RestClient restClient) {
+    public RestCountriesClient(RestClient restClient, RestCountriesProperties properties) {
         this.restClient = restClient;
+        this.properties = properties;
     }
 
     public List<CountryDto> getCountries() {
+        String url = properties.baseUrl()
+                + properties.countriesPath()
+                + "?fields="
+                + properties.fields();
         RestCountryResponse[] response =
                 restClient.get()
-                    .uri("https://restcountries.com/v3.1/all?fields=name,flags,region,cca2,capital")
+                    .uri(url)
                     .retrieve()
                     .body(RestCountryResponse[].class);
         if (response == null) {
