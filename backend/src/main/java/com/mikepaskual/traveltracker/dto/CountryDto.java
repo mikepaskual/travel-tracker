@@ -5,6 +5,7 @@ public record CountryDto(
         String name,
         String capital,
         String region,
-        String flagUrl
+        String flagUrl,
+        String flagDescription
 ) {
 }

@@ -1,12 +1,12 @@
 package com.mikepaskual.traveltracker.client;
 
-import com.mikepaskual.traveltracker.client.dto.RestCountryResponse;
+import com.mikepaskual.traveltracker.client.dto.CountryResponse;
+import com.mikepaskual.traveltracker.client.dto.RestCountriesResponse;
 import com.mikepaskual.traveltracker.config.RestCountriesProperties;
 import com.mikepaskual.traveltracker.dto.CountryDto;
 import org.springframework.stereotype.Component;
 import org.springframework.web.client.RestClient;
 
-import java.util.Arrays;
 import java.util.List;
 
 @Component
@@ -21,32 +21,29 @@ public class RestCountriesClient {
     }
 
     public List<CountryDto> getCountries() {
-        String url = properties.baseUrl()
-                + properties.countriesPath()
-                + "?fields="
-                + properties.fields();
-        RestCountryResponse[] response =
-                restClient.get()
-                    .uri(url)
-                    .retrieve()
-                    .body(RestCountryResponse[].class);
+        RestCountriesResponse response = restClient.get()
+                .uri(properties.uri() + "?responseFields=" + properties.responseFields())
+                .header("Authorization", "Bearer " + properties.apiKey())
+                .retrieve()
+                .body(RestCountriesResponse.class);
         if (response == null) {
             return List.of();
         }
-        return Arrays.stream(response)
+        return response.data().objects().stream()
                 .map(this::toCountryDto)
                 .toList();
     }
 
-    private CountryDto toCountryDto(RestCountryResponse country) {
+    private CountryDto toCountryDto(CountryResponse country) {
         return new CountryDto(
-                country.cca2(),
-                country.name().common(),
-                country.capital() != null && !country.capital().isEmpty()
-                        ? country.capital().get(0)
+                country.codes().alpha_2(),
+                country.names().common(),
+                country.capitals() != null && !country.capitals().isEmpty()
+                        ? country.capitals().get(0).name()
                         : "",
                 country.region(),
-                country.flags().svg()
+                country.flag().url_svg(),
+                country.flag().description()
         );
     }
 }
