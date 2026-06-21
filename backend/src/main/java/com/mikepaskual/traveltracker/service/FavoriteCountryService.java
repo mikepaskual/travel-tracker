@@ -1,11 +1,13 @@
 package com.mikepaskual.traveltracker.service;
 
 import com.mikepaskual.traveltracker.builder.GenericBuilder;
+import com.mikepaskual.traveltracker.dto.FavoriteCountryDto;
 import com.mikepaskual.traveltracker.entity.FavoriteCountry;
 import com.mikepaskual.traveltracker.repository.FavoriteCountryRepository;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 @Service
 public class FavoriteCountryService {
@@ -17,13 +19,26 @@ public class FavoriteCountryService {
     }
 
     public void addFavorite(String countryCode) {
-        String countryCodeUppered = countryCode.toUpperCase();
+        String countryCodeUpper = countryCode.toUpperCase();
 
-        if (!favoriteCountryRepository.existsById(countryCodeUppered)) {
+        if (!favoriteCountryRepository.existsById(countryCodeUpper)) {
             favoriteCountryRepository.save(GenericBuilder.of(FavoriteCountry::new)
-                    .with(FavoriteCountry::setCountryCode, countryCodeUppered)
+                    .with(FavoriteCountry::setCountryCode, countryCodeUpper)
                     .with(FavoriteCountry::setCreatedAt, LocalDateTime.now())
                     .build());
         }
+    }
+
+    public List<FavoriteCountryDto> getFavoriteCountries() {
+        return favoriteCountryRepository.findAll()
+                .stream()
+                .map(this::toDto)
+                .toList();
+    }
+
+    private FavoriteCountryDto toDto(FavoriteCountry favoriteCountry) {
+        return new FavoriteCountryDto(
+                favoriteCountry.getCountryCode(),
+                favoriteCountry.getCreatedAt());
     }
 }
