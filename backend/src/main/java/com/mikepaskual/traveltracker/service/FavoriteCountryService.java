@@ -8,6 +8,8 @@ import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Set;
+import java.util.stream.Collectors;
 
 @Service
 public class FavoriteCountryService {
@@ -16,6 +18,13 @@ public class FavoriteCountryService {
 
     public FavoriteCountryService(FavoriteCountryRepository favoriteCountryRepository) {
         this.favoriteCountryRepository = favoriteCountryRepository;
+    }
+
+    public Set<String> getFavoriteCountryCodes() {
+        return favoriteCountryRepository.findAll()
+                .stream()
+                .map(FavoriteCountry::getCountryCode)
+                .collect(Collectors.toSet());
     }
 
     public void addFavorite(String countryCode) {

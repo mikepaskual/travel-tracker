@@ -20,7 +20,7 @@ public class RestCountriesClient {
         this.properties = properties;
     }
 
-    public List<CountryDto> getCountries() {
+    public List<CountryResponse> getCountries() {
         RestCountriesResponse response = restClient.get()
                 .uri(properties.uri() + "?responseFields=" + properties.responseFields())
                 .header("Authorization", "Bearer " + properties.apiKey())
@@ -29,21 +29,7 @@ public class RestCountriesClient {
         if (response == null) {
             return List.of();
         }
-        return response.data().objects().stream()
-                .map(this::toCountryDto)
-                .toList();
+        return response.data().objects();
     }
 
-    private CountryDto toCountryDto(CountryResponse country) {
-        return new CountryDto(
-                country.codes().alpha_2(),
-                country.names().common(),
-                country.capitals() != null && !country.capitals().isEmpty()
-                        ? country.capitals().get(0).name()
-                        : "",
-                country.region(),
-                country.flag().url_svg(),
-                country.flag().description()
-        );
-    }
 }

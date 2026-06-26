@@ -6,6 +6,7 @@ public record CountryDto(
         String capital,
         String region,
         String flagUrl,
-        String flagDescription
+        String flagDescription,
+        boolean favorite
 ) {
 }
