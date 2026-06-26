@@ -4,7 +4,8 @@ import org.springframework.boot.context.properties.ConfigurationProperties;
 
 @ConfigurationProperties(prefix = "restcountries")
 public record RestCountriesProperties(
-        String uri,
+        String baseUrl,
+        String countriesPath,
         String apiKey,
         String responseFields
 ) {

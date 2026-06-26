@@ -27,12 +27,9 @@ public class CountryService {
                 .toList();
     }
 
-    public Optional<CountryDto> getCountryByCode(String code) {
-        return restCountriesClient.getCountries()
-                .stream()
-                .filter(country -> country.codes().alpha_2().equalsIgnoreCase(code))
-                .map(country -> toCountryDto(country, getFavoriteCodes()))
-                .findFirst();
+    public Optional<CountryDto> getCountryByCode(String countryCode) {
+        return restCountriesClient.getCountryByCode(countryCode)
+                .map(country -> toCountryDto(country, getFavoriteCodes()));
     }
 
     private Set<String> getFavoriteCodes() {
