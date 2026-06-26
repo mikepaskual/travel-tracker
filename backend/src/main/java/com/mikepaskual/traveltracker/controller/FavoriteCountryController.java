@@ -2,6 +2,7 @@ package com.mikepaskual.traveltracker.controller;
 
 import com.mikepaskual.traveltracker.dto.FavoriteCountryDto;
 import com.mikepaskual.traveltracker.service.FavoriteCountryService;
+import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -19,6 +20,12 @@ public class FavoriteCountryController {
     @PostMapping("/{countryCode}")
     public void addFavorite(@PathVariable String countryCode) {
         favoriteCountryService.addFavorite(countryCode);
+    }
+
+    @DeleteMapping("/{countryCode}")
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    public void removeFavorite(@PathVariable String countryCode) {
+        favoriteCountryService.removeFavorite(countryCode);
     }
 
     @GetMapping

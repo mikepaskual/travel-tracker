@@ -38,6 +38,14 @@ public class FavoriteCountryService {
         }
     }
 
+    public void removeFavorite(String countryCode) {
+        String countryCodeUpper = countryCode.toUpperCase();
+
+        if (favoriteCountryRepository.existsById(countryCodeUpper)) {
+            favoriteCountryRepository.deleteById(countryCodeUpper);
+        }
+    }
+
     public List<FavoriteCountryDto> getFavoriteCountries() {
         return favoriteCountryRepository.findAll()
                 .stream()
