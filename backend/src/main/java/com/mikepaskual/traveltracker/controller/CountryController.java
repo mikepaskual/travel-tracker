@@ -1,6 +1,7 @@
 package com.mikepaskual.traveltracker.controller;
 
 import com.mikepaskual.traveltracker.dto.CountryDto;
+import com.mikepaskual.traveltracker.exception.CountryNotFoundException;
 import com.mikepaskual.traveltracker.service.CountryService;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -29,7 +30,6 @@ public class CountryController {
     @GetMapping("/{code}")
     public CountryDto getCountryByCode(@PathVariable String code) {
         return countryService.getCountryByCode(code)
-                .orElseThrow(
-                        () -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Country not found"));
+                .orElseThrow(() -> new CountryNotFoundException(code));
     }
 }

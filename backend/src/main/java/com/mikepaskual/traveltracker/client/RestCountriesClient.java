@@ -31,7 +31,7 @@ public class RestCountriesClient {
                 .header("Authorization", "Bearer " + properties.apiKey())
                 .retrieve()
                 .body(RestCountriesResponse.class);
-        if (response == null) {
+        if (response == null || response.data().objects().isEmpty()) {
             return Optional.empty();
         }
         return Optional.of(response.data().objects().get(0));
